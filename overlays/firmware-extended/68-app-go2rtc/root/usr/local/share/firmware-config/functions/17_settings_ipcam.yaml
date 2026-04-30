@@ -1,3 +1,12 @@
+links:
+  go2rtc:
+    url: /go2rtc/
+    icon: "📡"
+    label: IP Camera Streams (go2rtc)
+    condition:
+      setting: camera-ipcam
+      value: go2rtc
+
 settings:
   camera:
     items:
