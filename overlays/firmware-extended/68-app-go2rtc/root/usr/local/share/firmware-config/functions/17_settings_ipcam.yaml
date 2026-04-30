@@ -19,7 +19,7 @@ settings:
               - -xc
               - |
                 /usr/local/bin/extended-config.py add /home/lava/printer_data/config/extended/extended2.cfg camera ipcam none &&
-                /etc/init.d/S99go2rtc stop
+                /etc/init.d/S99go2rtc stop &&
                 /usr/local/bin/go2rtc-pkg clean
           go2rtc:
             label: go2rtc
