@@ -1,0 +1,38 @@
+# go2rtc default configuration
+# Edit this file to add your IP cameras.
+# After saving, restart the service: /etc/init.d/S99go2rtc restart
+#
+# Documentation: https://github.com/AlexxIT/go2rtc
+
+api:
+  # Bind only to localhost; nginx proxies /go2rtc/ to this port
+  listen: 127.0.0.1:1984
+
+# RTSP output server — disabled by default to avoid conflict with the
+# printer's built-in RTSP server (port 8554).
+# Uncomment and change the port if you need RTSP re-streaming from go2rtc.
+#rtsp:
+#  listen: :8555
+
+log:
+  level: warn
+
+streams:
+  # Add your IP cameras below. The stream name becomes the path used in
+  # Fluidd/Mainsail (e.g. stream name "tapo_cam" → URL ends with /tapo_cam).
+  #
+  # --- TP-Link Tapo ---
+  # tapo_cam: tapo://user:password@192.168.1.10
+  #
+  # --- Generic RTSP (Reolink, Amcrest, Wyze, most IP cameras) ---
+  # reolink_main: rtsp://admin:password@192.168.1.11/h264Preview_01_main
+  # reolink_sub:  rtsp://admin:password@192.168.1.11/h264Preview_01_sub
+  #
+  # --- ONVIF ---
+  # onvif_cam: onvif://user:password@192.168.1.12
+  #
+  # --- Eufy (uses RTSP with custom path) ---
+  # eufy_cam: rtsp://admin:password@192.168.1.13:554/live/ch0
+  #
+  # --- HTTP MJPEG source ---
+  # mjpeg_cam: http://192.168.1.14:8080/?action=stream

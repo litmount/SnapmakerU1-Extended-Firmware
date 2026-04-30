@@ -1,0 +1,46 @@
+settings:
+  camera:
+    items:
+      camera-ipcam:
+        label: IP Camera (go2rtc)
+        description: Enable go2rtc to stream IP cameras (Tapo, Reolink, ONVIF, RTSP, etc.) into Fluidd/Mainsail.
+        get_cmd:
+          - /usr/local/bin/extended-config.py
+          - get
+          - /home/lava/printer_data/config/extended/extended2.cfg
+          - camera
+          - ipcam
+          - none
+        options:
+          none:
+            label: Disabled
+            cmd:
+              - bash
+              - -xc
+              - |
+                /usr/local/bin/extended-config.py add /home/lava/printer_data/config/extended/extended2.cfg camera ipcam none &&
+                /etc/init.d/S99go2rtc stop
+                /usr/local/bin/go2rtc-pkg clean
+          go2rtc:
+            label: go2rtc
+            cmd:
+              - bash
+              - -xec
+              - |
+                echo "Downloading go2rtc..."
+                /usr/local/bin/go2rtc-pkg download
+
+                echo "Enabling go2rtc..."
+                /usr/local/bin/extended-config.py add /home/lava/printer_data/config/extended/extended2.cfg camera ipcam go2rtc
+
+                echo "Starting go2rtc service..."
+                /etc/init.d/S99go2rtc restart
+
+                echo
+                echo "go2rtc enabled."
+                echo "Edit /home/lava/printer_data/go2rtc/go2rtc.yaml to add your IP cameras, then restart:"
+                echo "  /etc/init.d/S99go2rtc restart"
+                echo
+                echo "In Fluidd/Mainsail webcam settings, set the go2rtc URL to:"
+                echo "  http://<printer-ip>/go2rtc/"
+        default: none
