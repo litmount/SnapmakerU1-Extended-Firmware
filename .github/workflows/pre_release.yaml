@@ -2,7 +2,9 @@ on:
   push:
     branches:
       - main
+      - develop
       - 'stable-*'
+      - 'copilot/**'
   workflow_dispatch:
 
 jobs:
@@ -49,7 +51,7 @@ jobs:
     - name: Set GIT_VERSION
       shell: bash
       run: |
-        nextVer=$(./scripts/next_version.sh paxx12)
+        nextVer=$(./scripts/next_version.sh litmount)
         echo "GIT_VERSION=${nextVer//v/}" | tee -a $GITHUB_ENV
 
     - name: Download firmware
@@ -59,7 +61,7 @@ jobs:
       run: ./dev.sh make build PROFILE=extended OUTPUT_FILE=U1_extended_${{ env.GIT_VERSION }}_upgrade.bin
 
     - name: Generate Changelog
-      run: make changelog >> RELEASE.md
+      run: make changelog >> RELEASE.md || echo "## Changes\n\n- Initial build" >> RELEASE.md
 
     - name: 'Release debian files'
       uses: ncipollo/release-action@v1
