@@ -22,17 +22,17 @@ streams:
   # Fluidd/Mainsail (e.g. stream name "tapo_cam" → URL ends with /tapo_cam).
   #
   # --- TP-Link Tapo ---
-  # tapo_cam: tapo://user:password@192.168.1.10
+  # tapo_cam: ******192.168.1.10
   #
   # --- Generic RTSP (Reolink, Amcrest, Wyze, most IP cameras) ---
-  # reolink_main: rtsp://admin:password@192.168.1.11/h264Preview_01_main
-  # reolink_sub:  rtsp://admin:password@192.168.1.11/h264Preview_01_sub
+  # reolink_main: ******192.168.1.11/h264Preview_01_main
+  # reolink_sub:  ******192.168.1.11/h264Preview_01_sub
   #
   # --- ONVIF ---
-  # onvif_cam: onvif://user:password@192.168.1.12
+  # onvif_cam: ******192.168.1.12
   #
   # --- Eufy (uses RTSP with custom path) ---
-  # eufy_cam: rtsp://admin:password@192.168.1.13:554/live/ch0
+  # eufy_cam: ******192.168.1.13:554/live/ch0
   #
   # --- HTTP MJPEG source ---
   # mjpeg_cam: http://192.168.1.14:8080/?action=stream
