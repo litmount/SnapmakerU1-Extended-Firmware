@@ -12,13 +12,30 @@ EXTRACT_DIR="$4"
 
 TARGET_DIR="$(dirname "$TARGET")"
 FILENAME="$(basename "$TARGET")"
+DOWNLOAD_RETRIES="${DOWNLOAD_RETRIES:-5}"
+DOWNLOAD_RETRY_DELAY="${DOWNLOAD_RETRY_DELAY:-5}"
 
 set -e
 mkdir -p "$TARGET_DIR"
 
 if [[ ! -f "$TARGET" ]]; then
   echo ">> Downloading $FILENAME..."
-  wget -O "$TARGET" "$URL"
+  attempt=1
+  while true; do
+    rm -f "$TARGET"
+    if wget --timeout=30 -O "$TARGET" "$URL"; then
+      break
+    fi
+
+    if (( attempt >= DOWNLOAD_RETRIES )); then
+      echo "[!] Failed to download $FILENAME after $DOWNLOAD_RETRIES attempts"
+      exit 1
+    fi
+
+    echo "[!] Download failed for $FILENAME (attempt $attempt/$DOWNLOAD_RETRIES), retrying in ${DOWNLOAD_RETRY_DELAY}s..."
+    attempt=$((attempt + 1))
+    sleep "$DOWNLOAD_RETRY_DELAY"
+  done
 fi
 
 echo ">> Verifying $TARGET checksum..."
