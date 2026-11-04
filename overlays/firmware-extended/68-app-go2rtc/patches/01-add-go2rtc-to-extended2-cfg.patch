@@ -1,0 +1,11 @@
+--- a/usr/local/share/firmware-config/extended/extended2.cfg
++++ b/usr/local/share/firmware-config/extended/extended2.cfg
+@@ -19,6 +19,8 @@
+ # usb_resolution: 1080p25
+ # Enable RTSP streaming server: true, false
+ rtsp: false
++# IP Camera (go2rtc): none, go2rtc
++ipcam: none
+ 
+ [components]
+ # Filament tag detection: external, snapmaker, openrfid, openrfid-generic

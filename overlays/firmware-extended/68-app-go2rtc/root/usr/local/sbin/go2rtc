@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+#
+# go2rtc package manager
+# Downloads and installs a pinned version of go2rtc from GitHub
+#
+
+VERSION="1.9.14"
+URL="https://github.com/AlexxIT/go2rtc/releases/download/v${VERSION}/go2rtc_linux_arm64"
+SHA256="359fabade8a7a51e81a55fe6df6b0ef81764a5e1d63179577534eaaa71904b50"
+
+INSTALL_DIR="/oem/apps/go2rtc-${VERSION}"
+TMP_FILE="$INSTALL_DIR.tmp"
+
+# When invoked as "go2rtc", proxy to the real binary
+case "$(basename "$0")" in
+    go2rtc)
+        if [[ ! -x "$INSTALL_DIR/go2rtc" ]]; then
+            echo "go2rtc not installed. Run 'go2rtc-pkg download' first."
+            exit 1
+        fi
+        exec "$INSTALL_DIR/go2rtc" "$@"
+        ;;
+esac
+
+check() {
+    if [[ -x "$INSTALL_DIR/go2rtc" ]]; then
+        echo "go2rtc is installed (version $VERSION)."
+        return 0
+    else
+        echo "go2rtc is not installed."
+        return 1
+    fi
+}
+
+download() {
+    rm -rf "$TMP_FILE"
+    mkdir -p "$(dirname "$TMP_FILE")"
+
+    echo "Downloading go2rtc $VERSION..."
+    if ! /usr/local/bin/curl -fSL -o "$TMP_FILE" "$URL"; then
+        echo "Download failed"
+        return 1
+    fi
+
+    echo "Verifying checksum..."
+    if ! echo "$SHA256  $TMP_FILE" | sha256sum -c; then
+        echo "Checksum verification failed"
+        return 1
+    fi
+
+    chmod +x "$TMP_FILE"
+
+    rm -rf "$INSTALL_DIR"
+    mkdir -p "$INSTALL_DIR"
+    if ! mv "$TMP_FILE" "$INSTALL_DIR/go2rtc"; then
+        echo "Failed to install go2rtc to $INSTALL_DIR"
+        return 1
+    fi
+
+    echo "go2rtc $VERSION installed to $INSTALL_DIR"
+}
+
+case "$1" in
+    check)
+        check
+        ;;
+    download)
+        if check; then
+            echo "go2rtc is already installed."
+            exit 0
+        fi
+        if ! download; then
+            rm -rf "$TMP_FILE"
+            exit 1
+        fi
+        ;;
+    clean)
+        echo "Removing go2rtc installation..."
+        rm -rf "$INSTALL_DIR"
+        echo "Removed."
+        ;;
+    *)
+        echo "Usage: $0 check|download|clean"
+        exit 1
+        ;;
+esac
